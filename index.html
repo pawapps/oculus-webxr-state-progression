@@ -1,0 +1,154 @@
+<!-- https://github.com/stemkoski/A-Frame-Examples/blob/master/quest-controllers.html -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>A-Frame: Quest controller data demo</title>
+	<meta name="description" content="Hello, WebVR! - A-Frame">
+	<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="js/controller-listener.js"></script>
+  <script src="js/timing-variables.js"></script>
+</head>
+
+<body>
+
+<script>
+AFRAME.registerComponent('text-display', {
+	
+	init: function()
+	{
+		this.text = "";
+	},
+
+	tick: function()
+	{
+    if (typeof(active_state) == 'undefined') return;
+    if (active_state.text !== undefined) {
+      this.text = active_state.text;
+      this.el.setAttribute( "text", "value", this.text );
+      this.el.setAttribute( "visible", "true");
+    } else {
+      // Hide text wall
+      this.el.setAttribute("visible", "false");
+    }
+	},
+	
+});
+</script>
+
+<script>
+  AFRAME.registerComponent('controller-handler', {
+    
+    init: function()
+    {
+      this.controllerData = document.querySelector("#controller-data").components["controller-listener"];
+    },
+  
+    tick: function()
+    {
+      if (this.controllerData.buttonY.pressing) y_pressed = true;
+      if (this.controllerData.buttonX.pressing) x_pressed = true;
+      if (this.controllerData.buttonB.pressing) b_pressed = true;
+      if (this.controllerData.buttonA.pressing) a_pressed = true;
+      if (this.controllerData.leftTrigger.pressing) left_trigger_pressed = true;
+      if (this.controllerData.leftGrip.pressing) left_grip_pressed = true;
+      if (this.controllerData.rightTrigger.pressing) right_trigger_pressed = true;
+      if (this.controllerData.rightGrip.pressing) right_grip_pressed = true;
+    },
+    
+  });
+</script>
+
+<script>
+  AFRAME.registerComponent('sky-handler', {
+    
+    init: function()
+    {
+    },
+  
+    tick: function()
+    {
+      if (typeof(active_state) == 'undefined') return;
+      if (active_state.background_color === undefined) {
+        this.el.setAttribute('color', '#000');  // DEFAULT black
+      } else {
+        this.el.setAttribute('color', active_state.background_color);
+      }
+    },
+    
+  });
+</script>
+
+<script>
+  AFRAME.registerComponent('sound-handler', {
+    
+    init: function()
+    {
+    },
+  
+    tick: function()
+    {
+      if (typeof(active_state) == 'undefined') return;
+      if (active_state.sound === undefined) {
+        const sound_entity = document.querySelector('[sound-handler]');
+        if (sound_entity !== undefined && sound_entity.components !== undefined && sound_entity.components.sound !== undefined) {
+          sound_entity.components.sound.stopSound();
+        }
+        this.el.setAttribute('sound', '');
+      } else {
+        this.el.setAttribute('sound', `src: #${active_state.sound}; autoplay: true; ${active_state.sound_loop == true ? 'loop: true' : 'loop: false'}`);
+      }
+    },
+    
+  });
+</script>
+
+<a-scene renderer="antialias: true;">
+
+  <a-assets>
+    <audio id="banana" src="audio/banana.mp3" preload="auto"></audio>
+  </a-assets>
+
+  <a-entity
+    sound-handler>
+  </a-entity>
+		
+	<a-sky 
+		color = "#000"
+    sky-handler>
+	</a-sky>
+
+	<a-entity 
+	    id="controller-data" 
+	    controller-listener="leftControllerId:  #left-controller; 
+	                         rightControllerId: #right-controller;"
+      controller-handler>
+	</a-entity>
+
+	<a-entity 
+	    id="left-controller"
+	    oculus-touch-controls="hand: left">
+    </a-entity>
+	<a-entity
+		id="right-controller"
+	    oculus-touch-controls="hand: right">
+	</a-entity>
+
+	<a-entity
+		id="textArea"
+		position="0 1.5 -2.9"
+		geometry="primitive: plane;  width: 3; height: 2"
+		material="color: #444444; transparent: true; opacity: 0.80;"
+		text="anchor: center; baseline: center; wrapCount: 40;
+				transparent: true; opacity: 0.90; color: #ccc;"
+		text-display>
+	</a-entity>
+
+</a-scene>
+
+<script src="js/timing-engine.js"></script>
+<script src="js/timing-data.js"></script>
+
+</body>
+</html>
