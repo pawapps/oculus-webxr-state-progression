@@ -2,6 +2,7 @@
  * Notes:
  *  o text: text to display in window
  *  o trigger: what moves on to the next state
+ *    > trigger_any_pressed
  *    > trigger_a_pressed
  *    > trigger_b_pressed
  *    > trigger_x_pressed
@@ -10,9 +11,11 @@
  *    > trigger_left_grip_pressed
  *    > trigger_right_trigger_pressed
  *    > trigger_right_grip_pressed
- *    > trigger_timer; {trigger_data: <seconds>}
+ *    > trigger_timer
+ *      - trigger_data: <seconds>
+ *      - button_reset_timer: true // will reset timer if button is pressed before timer expires
  *  o background_color: changes the sky color on state load
- *  o sound: sound to play on state load
+ *  o sound: banana|traffic|talking
  *    > sound_loop: true|false, whether the sound loops
  *  o strobe: [array of color values to loop through very quickly]
  * 

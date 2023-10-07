@@ -22,6 +22,14 @@ var check_trigger = function() {
   // Check if trigger criteria is met
   const triggered = active_state.trigger(active_state.trigger_data);
 
+  if (!triggered && typeof(active_state.button_reset_timer) != 'undefined' && any_pressed) {
+    // A button was pressed while a timer was running, so the timer needs reset
+    // Delete the existing timer
+    clearTimeout(trigger_timer_timeout);
+    // Start the timer over again
+    active_state.trigger(active_state.trigger_data);
+  }
+
   if (!triggered && !purgatory) return;
 
   if (triggered) {
