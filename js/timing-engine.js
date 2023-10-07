@@ -26,6 +26,7 @@ var check_trigger = function() {
     // A button was pressed while a timer was running, so the timer needs reset
     // Delete the existing timer
     clearTimeout(trigger_timer_timeout);
+    trigger_timer_timeout = undefined;
     // Start the timer over again
     active_state.trigger(active_state.trigger_data);
   }
