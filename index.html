@@ -1,11 +1,9 @@
-<!-- https://github.com/stemkoski/A-Frame-Examples/blob/master/quest-controllers.html -->
-
 <!DOCTYPE html>
 <html>
 
 <head>
-	<title>A-Frame: Quest controller data demo</title>
-	<meta name="description" content="Hello, WebVR! - A-Frame">
+	<title>Reaction Time Project</title>
+	<meta name="description" content="">
 	<script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="js/controller-listener.js"></script>
   <script src="js/timing-variables.js"></script>
@@ -26,7 +24,7 @@ AFRAME.registerComponent('text-display', {
     if (typeof(active_state) == 'undefined') return;
     if (active_state.text !== undefined) {
       this.text = active_state.text;
-      this.el.setAttribute( "text", "value", this.text );
+      this.el.setAttribute( "text", "value", active_state.text );
       this.el.setAttribute( "visible", "true");
     } else {
       // Hide text wall
@@ -47,14 +45,14 @@ AFRAME.registerComponent('text-display', {
   
     tick: function()
     {
-      if (this.controllerData.buttonY.pressing) y_pressed = true;
-      if (this.controllerData.buttonX.pressing) x_pressed = true;
-      if (this.controllerData.buttonB.pressing) b_pressed = true;
-      if (this.controllerData.buttonA.pressing) a_pressed = true;
-      if (this.controllerData.leftTrigger.pressing) left_trigger_pressed = true;
-      if (this.controllerData.leftGrip.pressing) left_grip_pressed = true;
-      if (this.controllerData.rightTrigger.pressing) right_trigger_pressed = true;
-      if (this.controllerData.rightGrip.pressing) right_grip_pressed = true;
+      if (this.controllerData.buttonY.pressing) { any_pressed = true; y_pressed = true };
+      if (this.controllerData.buttonX.pressing) { any_pressed = true; x_pressed = true };
+      if (this.controllerData.buttonB.pressing) { any_pressed = true; b_pressed = true };
+      if (this.controllerData.buttonA.pressing) { any_pressed = true; a_pressed = true };
+      if (this.controllerData.leftTrigger.pressing) { any_pressed = true; left_trigger_pressed = true };
+      if (this.controllerData.leftGrip.pressing) { any_pressed = true; left_grip_pressed = true };
+      if (this.controllerData.rightTrigger.pressing) { any_pressed = true; right_trigger_pressed = true };
+      if (this.controllerData.rightGrip.pressing) { any_pressed = true; right_grip_pressed = true };
     },
     
   });
@@ -104,10 +102,49 @@ AFRAME.registerComponent('text-display', {
   });
 </script>
 
+<script>
+  AFRAME.registerComponent('strobe-handler', {
+    
+    init: function()
+    {
+      this.start_timer = undefined;
+      this.strobe_index = 0;
+    },
+  
+    tick: function()
+    {
+      if (typeof(active_state) == 'undefined') return;
+      if (active_state.strobe === undefined) {
+        if (this.strobe_interval) clearInterval(this.strobe_interval);
+        this.el.setAttribute("visible", "false");
+        return;
+      };
+      if (this.strobe_interval !== undefined) return;
+
+      if (this.start_timer === undefined) this.start_timer = new Date();
+      if (Number(new Date()) - Number(this.start_timer) > 50) {
+        this.el.setAttribute('color', active_state.strobe[this.strobe_index]);
+        this.strobe_index += 1;
+        if (this.strobe_index == active_state.strobe.length) this.strobe_index = 0;
+        this.start_timer = new Date();
+      }
+      this.el.setAttribute("visible", "true");
+    },
+
+    remove: function() 
+    {
+      clearInterval(this.strobe_interval);
+    }
+    
+  });
+</script>
+
 <a-scene renderer="antialias: true;">
 
   <a-assets>
     <audio id="banana" src="audio/banana.mp3" preload="auto"></audio>
+    <audio id="traffic" src="audio/traffic.mp3" preload="auto"></audio>
+    <audio id="talking" src="audio/talking.mp3" preload="auto"></audio>
   </a-assets>
 
   <a-entity
@@ -119,6 +156,10 @@ AFRAME.registerComponent('text-display', {
     sky-handler>
 	</a-sky>
 
+  <a-sky
+    strobe-handler>
+  </a-sky>
+
 	<a-entity 
 	    id="controller-data" 
 	    controller-listener="leftControllerId:  #left-controller; 
@@ -129,9 +170,9 @@ AFRAME.registerComponent('text-display', {
 	<a-entity 
 	    id="left-controller"
 	    oculus-touch-controls="hand: left">
-    </a-entity>
+  </a-entity>
 	<a-entity
-		id="right-controller"
+		  id="right-controller"
 	    oculus-touch-controls="hand: right">
 	</a-entity>
 

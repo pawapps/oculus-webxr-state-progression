@@ -13,25 +13,47 @@
  *    > trigger_timer; {trigger_data: <seconds>}
  *  o background_color: changes the sky color on state load
  *  o sound: sound to play on state load
- *  o sound_loop: true|false, whether the sound loops
+ *    > sound_loop: true|false, whether the sound loops
+ *  o strobe: [array of color values to loop through very quickly]
+ * 
+ *  Text variables:
+ *  o [react_time] will be replaced with the previous states duration
  */
 
+
+
 var timing_data = [
+  
   {
-    text: `Timing at 0 seconds\n
+    text: `getGamePads: \n
+            On the next screen, press (A) when\n
+            you hear the minions.\n\n
             Press (A) to continue`,
+    trigger: trigger_any_pressed,
+  },
+  {
+    sound: 'traffic',
+    sound_loop: true,
     trigger: trigger_a_pressed,
-    background_color: '#f00'
   },
   {
-    text: `State #2, wait 5 seconds`,
-    trigger: trigger_timer,
-    trigger_data: 5,
-    sound: 'banana',
-    sound_loop: true
+    text: 'are you ok?'
   },
-  {
-    text: `State #3 has arrived`
-  }
+  // {
+  //   strobe: ['#f00', '#0f0', '#00f'],
+  //   trigger: trigger_a_pressed,
+  // },
+  // {
+  //   trigger: trigger_timer,
+  //   trigger_data: Math.floor(Math.random() * 2) + 5,
+  // },
+  // {
+  //   sound: 'banana',
+  //   sound_loop: true,
+  //   trigger: trigger_a_pressed,
+  // },
+  // {
+  //   text: `Your reaction was: [react_time] milliseconds`,
+  // }
 ];
 active_state = timing_data[0];

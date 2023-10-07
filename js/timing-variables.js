@@ -7,6 +7,7 @@ var left_trigger_pressed = false;
 var left_grip_pressed = false;
 var right_trigger_pressed = false;
 var right_grip_pressed = false;
+var any_pressed = false;
 
 // Initialize timing trigger variables
 var timer_complete = false;
@@ -33,6 +34,7 @@ var trigger_left_trigger_pressed = (data) => left_trigger_pressed;
 var trigger_left_grip_pressed = (data) => left_grip_pressed;
 var trigger_right_trigger_pressed = (data) => right_trigger_pressed;
 var trigger_right_grip_pressed = (data) => right_trigger_pressed;
+var trigger_any_pressed = (data) => any_pressed;
 
 // Reaction timer (from state load to trigger)
 var react_timer_start = new Date();

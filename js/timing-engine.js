@@ -8,19 +8,8 @@ var trigger_reset = function() {
   left_grip_pressed = false;
   right_trigger_pressed = false;
   right_grip_pressed = false;
+  any_pressed = false;
   timer_complete = false;
-}
-
-// Function to check if any controller button is being pressed
-var is_controller_pressed = function() {
-  if (a_pressed) return true;
-  if (b_pressed) return true;
-  if (x_pressed) return true;
-  if (y_pressed) return true;
-  if (left_trigger_pressed) return true;
-  if (left_grip_pressed) return true;
-  if (right_trigger_pressed) return true;
-  if (right_grip_pressed) return true;
 }
 
 var check_trigger = function() {
@@ -38,9 +27,10 @@ var check_trigger = function() {
   if (triggered) {
     // Trigger has been met!
     // Get react timer
-    const react_timer_delta = Number(new Date()) - react_timer_start;
-    react_timer_log.push(react_timer_delta);
-    console.log(react_timer_log);
+    if (active_state.duration === undefined) {
+      const react_timer_delta = Number(new Date()) - react_timer_start;
+      active_state.duration = react_timer_delta;
+    }
     
     //Reset all triggers
     trigger_reset();
@@ -49,15 +39,17 @@ var check_trigger = function() {
   }
 
   if (purgatory) {
-    if (is_controller_pressed()) return;  // remain in purgatory because buttons are still pressed
+    if (any_pressed) return;  // remain in purgatory because buttons are still pressed
     purgatory = false;  // continue on
   }
 
   // At this point, we are progressing to the next state
+  const duration = active_state.duration;
   active_state_index += 1;  // increment index
   if (active_state.length == active_state_index) return;  // No more states on timing data
   active_state = timing_data[active_state_index];
-  active_state.trigger(active_state.trigger_data);
+  if (active_state.text !== undefined) active_state.text = active_state.text.replace('[react_time]', duration);
+  if (active_state.trigger !== undefined) active_state.trigger(active_state.trigger_data);
   react_timer_start = new Date(); // reset start of react timer
 }
 
