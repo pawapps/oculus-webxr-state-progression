@@ -96,6 +96,10 @@ AFRAME.registerComponent('text-display', {
         this.el.setAttribute('sound', '');
       } else {
         this.el.setAttribute('sound', `src: #${active_state.sound}; autoplay: true; ${active_state.sound_loop == true ? 'loop: true' : 'loop: false'}`);
+        const sound_entity = document.querySelector('[sound-handler]');
+        if (sound_entity !== undefined && sound_entity.components !== undefined && sound_entity.components.sound !== undefined) {
+          sound_entity.components.sound.playSound();
+        }
       }
     },
     
