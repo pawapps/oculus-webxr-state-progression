@@ -1,3 +1,6 @@
+// Session data
+var session_id = Math.floor(Math.random()*1000000000);
+
 // Initialize controller trigger variables
 var a_pressed = false;
 var b_pressed = false;
@@ -46,3 +49,4 @@ var active_state = undefined;
 
 // Purgatory is the time a trigger has been met, but buttons are still pressed
 var purgatory = false;
+var cleared_purgatory = false;
