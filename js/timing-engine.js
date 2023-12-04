@@ -45,7 +45,8 @@ var check_trigger = function() {
     if (active_state.screen_duration === undefined) {
       const react_timer_delta = Number(new Date()) - react_timer_start;
       if (active_state.minimum_screen_duration * 1000 > react_timer_delta) {
-        // Minimum screen duration has not yet been met
+        // Minimum screen duration has not yet been 
+        trigger_reset();
         purgatory = false;
         return;
       }
@@ -74,8 +75,9 @@ var check_trigger = function() {
     const save = async function(inputs) {
       console.log(JSON.stringify(inputs, null, 2));
 
-      const params = inputs;
-    
+      let params = inputs;
+      if (params.screen_description === undefined) params.screen_description = "";
+
       const url = `https://collector.pwlk.net/reaction/new`;
       const response = await fetch(url, {
         method: 'POST',
